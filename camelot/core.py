@@ -762,4 +762,7 @@ class TableList(object):
                     z.write(filepath, os.path.basename(filepath))
                 fileName = zipname
 
-        return fileName
+        try:
+            return fileName
+        except Exception as e:
+            print(e)
