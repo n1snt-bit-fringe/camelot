@@ -695,6 +695,8 @@ class TableList(object):
             to_format = self._format_func(table, f)
             to_format(filepath)
 
+        return filename
+
     def _compress_dir(self, **kwargs):
         path = kwargs.get("path")
         dirname = kwargs.get("dirname")
@@ -706,6 +708,8 @@ class TableList(object):
                 filename = f"{root}-page-{table.page}-table-{table.order}{ext}"
                 filepath = os.path.join(dirname, filename)
                 z.write(filepath, os.path.basename(filepath))
+
+        return filename
 
     def export(self, path, f="csv", compress=False):
         """Exports the list of tables to specified file format.
@@ -729,9 +733,10 @@ class TableList(object):
         kwargs = {"path": path, "dirname": dirname, "root": root, "ext": ext}
 
         if f in ["csv", "json", "html"]:
-            self._write_file(f=f, **kwargs)
+            fileName = self._write_file(f=f, **kwargs)
             if compress:
-                self._compress_dir(**kwargs)
+                fileName = self._compress_dir(**kwargs)
+
         elif f == "excel":
             filepath = os.path.join(dirname, basename)
             writer = pd.ExcelWriter(filepath)
@@ -739,10 +744,14 @@ class TableList(object):
                 sheet_name = f"page-{table.page}-table-{table.order}"
                 table.df.to_excel(writer, sheet_name=sheet_name, encoding="utf-8")
             writer.save()
+            fileName = filepath
+
             if compress:
                 zipname = os.path.join(os.path.dirname(path), root) + ".zip"
                 with zipfile.ZipFile(zipname, "w", allowZip64=True) as z:
                     z.write(filepath, os.path.basename(filepath))
+                fileName = zipname
+
         elif f == "sqlite":
             filepath = os.path.join(dirname, basename)
             for table in self._tables:
@@ -751,3 +760,6 @@ class TableList(object):
                 zipname = os.path.join(os.path.dirname(path), root) + ".zip"
                 with zipfile.ZipFile(zipname, "w", allowZip64=True) as z:
                     z.write(filepath, os.path.basename(filepath))
+                fileName = zipname
+
+        return fileName

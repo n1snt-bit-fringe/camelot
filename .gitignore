@@ -13,6 +13,7 @@ coverage.xml
 _build/
 
 .venv/
+venv/
 htmlcov/
 
 # vscode
