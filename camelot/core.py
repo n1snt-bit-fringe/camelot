@@ -766,3 +766,4 @@ class TableList(object):
             return fileName
         except Exception as e:
             print(e)
+            return None
