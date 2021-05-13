@@ -709,7 +709,7 @@ class TableList(object):
                 filepath = os.path.join(dirname, filename)
                 z.write(filepath, os.path.basename(filepath))
 
-        return filename
+        return zipname
 
     def export(self, path, f="csv", compress=False):
         """Exports the list of tables to specified file format.
