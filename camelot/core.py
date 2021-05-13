@@ -737,6 +737,8 @@ class TableList(object):
             if compress:
                 fileName = self._compress_dir(**kwargs)
 
+            return fileName
+
         elif f == "excel":
             filepath = os.path.join(dirname, basename)
             writer = pd.ExcelWriter(filepath)
@@ -744,13 +746,15 @@ class TableList(object):
                 sheet_name = f"page-{table.page}-table-{table.order}"
                 table.df.to_excel(writer, sheet_name=sheet_name, encoding="utf-8")
             writer.save()
-            fileName = filepath
+
+            return filepath
 
             if compress:
                 zipname = os.path.join(os.path.dirname(path), root) + ".zip"
                 with zipfile.ZipFile(zipname, "w", allowZip64=True) as z:
                     z.write(filepath, os.path.basename(filepath))
-                fileName = zipname
+
+                return zipname
 
         elif f == "sqlite":
             filepath = os.path.join(dirname, basename)
@@ -760,10 +764,5 @@ class TableList(object):
                 zipname = os.path.join(os.path.dirname(path), root) + ".zip"
                 with zipfile.ZipFile(zipname, "w", allowZip64=True) as z:
                     z.write(filepath, os.path.basename(filepath))
-                fileName = zipname
 
-        try:
-            return fileName
-        except Exception as e:
-            print(e)
-            return None
+                return zipname
