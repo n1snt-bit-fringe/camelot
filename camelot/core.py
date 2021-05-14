@@ -689,13 +689,15 @@ class TableList(object):
         dirname = kwargs.get("dirname")
         root = kwargs.get("root")
         ext = kwargs.get("ext")
+        filenames = []
         for table in self._tables:
             filename = f"{root}-page-{table.page}-table-{table.order}{ext}"
             filepath = os.path.join(dirname, filename)
             to_format = self._format_func(table, f)
             to_format(filepath)
+            filenames.append[filename]
 
-        return filename
+        return filenames
 
     def _compress_dir(self, **kwargs):
         path = kwargs.get("path")
@@ -737,7 +739,6 @@ class TableList(object):
             if compress:
                 fileName = self._compress_dir(**kwargs)
 
-            return fileName
 
         elif f == "excel":
             filepath = os.path.join(dirname, basename)
@@ -746,15 +747,14 @@ class TableList(object):
                 sheet_name = f"page-{table.page}-table-{table.order}"
                 table.df.to_excel(writer, sheet_name=sheet_name, encoding="utf-8")
             writer.save()
+            fileName = filepath
 
-            return filepath
 
             if compress:
                 zipname = os.path.join(os.path.dirname(path), root) + ".zip"
                 with zipfile.ZipFile(zipname, "w", allowZip64=True) as z:
                     z.write(filepath, os.path.basename(filepath))
-
-                return zipname
+                fileName = zipname
 
         elif f == "sqlite":
             filepath = os.path.join(dirname, basename)
@@ -764,5 +764,6 @@ class TableList(object):
                 zipname = os.path.join(os.path.dirname(path), root) + ".zip"
                 with zipfile.ZipFile(zipname, "w", allowZip64=True) as z:
                     z.write(filepath, os.path.basename(filepath))
+                fileName = zipname
 
-                return zipname
+        return fileName
