@@ -695,7 +695,7 @@ class TableList(object):
             filepath = os.path.join(dirname, filename)
             to_format = self._format_func(table, f)
             to_format(filepath)
-            filenames.append[filename]
+            filenames.append(filename)
 
         return filenames
 
