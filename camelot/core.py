@@ -582,7 +582,7 @@ class Table(object):
         kw.update(kwargs)
         self.df.to_csv(path, **kw)
 
-    def to_json(self, path, **kwargs):
+    def to_json(self, **kwargs):
         """Writes Table to a JSON file.
 
         For kwargs, check :meth:`pandas.DataFrame.to_json`.
@@ -596,8 +596,10 @@ class Table(object):
         kw = {"orient": "records"}
         kw.update(kwargs)
         json_string = self.df.to_json(**kw)
-        with open(path, "w") as f:
-            f.write(json_string)
+        #with open(path, "w") as f:
+        #    f.write(json_string)
+
+        return json_string
 
     def to_excel(self, path, **kwargs):
         """Writes Table to an Excel file.
