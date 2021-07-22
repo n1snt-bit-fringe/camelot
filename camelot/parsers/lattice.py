@@ -389,6 +389,8 @@ class Lattice(BaseParser):
 
         if not self.horizontal_text:
             if self.images:
+
+                raise ValueError("Passed image based PDF instead.")
                 warnings.warn(
                     "{} is image-based, camelot only works on"
                     " text-based pages.".format(os.path.basename(self.rootname))
